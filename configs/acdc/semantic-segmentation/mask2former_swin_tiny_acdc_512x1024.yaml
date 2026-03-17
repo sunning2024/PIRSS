@@ -1,0 +1,22 @@
+# configs/acdc/semantic-segmentation/mask2former_swin_tiny_acdc_512x1024.yaml
+
+# 以官方的 Cityscapes semantic config 为 base（路径按实际仓库调整）
+_BASE_: "../../cityscapes/semantic-segmentation/maskformer2_R101_bs16_90k.yaml"
+
+DATASETS:
+  TRAIN: ("acdc_semantic_train",)
+  TEST:  ("acdc_semantic_val",)
+
+# ACDC 分辨率和 Cityscapes 一样是 1024x2048，这里训练时可以略缩小一点
+INPUT:
+  IMAGE_SIZE: (512, 1024)   # 你显存足够的话也可以用 (768, 1536) 等
+  MIN_SIZE_TEST: 1024
+  MAX_SIZE_TEST: 2048
+
+SOLVER:
+  IMS_PER_BATCH: 8          # 4 张卡每卡 2 张；按你机器显存调整
+  BASE_LR: 0.0001           # 保持和 Cityscapes config 差不多
+  MAX_ITER: 90000           # 可以先减到 60k 做快速 baseline
+
+# 输出目录
+OUTPUT_DIR: "output/acdc_semantic/mask2former_swin_tiny_512x1024"

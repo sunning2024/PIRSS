@@ -1,0 +1,23 @@
+# configs/acdc/semantic-segmentation/maskformer2_R50_acdc_bs16_90k.yaml
+
+# 直接从 Cityscapes R50 语义分割配置继承
+_BASE_: "../../cityscapes/semantic-segmentation/maskformer2_R50_bs16_90k.yaml"
+
+DATASETS:
+  TRAIN: ("acdc_semantic_train",)
+  TEST:  ("acdc_semantic_val",)
+
+# 可以只改这些训练参数，尽量不要动 INPUT 结构
+SOLVER:
+  IMS_PER_BATCH: 12          # 2 卡的话就是每卡 2 张，按你显存调
+  BASE_LR: 0.0001           # 先沿用 Cityscapes 的学习率
+  MAX_ITER: 150000           # 可以先减到 60000 做 sanity check
+
+INPUT:
+  # 如果你不想改 crop，干脆不要重写 INPUT 块，直接删掉这一整个 INPUT 部分
+  CROP:
+    ENABLED: True
+    TYPE: "absolute"
+    SIZE: (512, 1024)       # 和 Base-Cityscapes 一致
+
+OUTPUT_DIR: "output/acdc_semantic/maskformer2_R50_acdc_bs16_90k"
